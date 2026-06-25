@@ -39,7 +39,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", bgcolor: "#f7f7f8" }}>
+            <Box sx={{ minHeight: "50vh", display: "flex", flexDirection: "column", bgcolor: "#f7f7f8" }}>
                 <HeaderLayout isButton={false}/>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ m: 3 }}>
                     <Typography variant="h5" sx={{ fontWeight: 600, flex: 1 }}>
