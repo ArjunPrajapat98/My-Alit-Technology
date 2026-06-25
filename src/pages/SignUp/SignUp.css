@@ -1,0 +1,11 @@
+.input_drop_error {
+    color: #d32f2f;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.66;
+    /* letter-spacing: 0.03333em; */
+    margin-left: 15px !important;
+    margin-top: 3px !important;
+    display: block;
+    font-family: "sans-serif" !important; 
+}
