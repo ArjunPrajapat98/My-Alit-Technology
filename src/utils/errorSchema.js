@@ -35,34 +35,6 @@ export const errorSchema = {
     Industry: Yup.string().trim().max(50, "Max 50 characters."), // optional per spec
     CurrencySymbol: Yup.string().trim().required("Currency symbol is required.").max(5, "Max 5 characters."),
   }),
-  // createSignUp: Yup.object().shape({
-  //   FirstName: Yup.string().trim().required("This filed is Required"),
-  //   LastName: Yup.string().trim().required("This filed is Required"),
-  //   Email: Yup.string()
-  //     // .nullable() // Allows empty values
-  //     .required()
-  //     .email("Invalid email format. Example: example@domain.com")
-  //     .test("tld-check", "Top-level domain cannot contain numbers", (value) => {
-  //       if (!value) return true;
-  //       const domain = value.split("@")[1];
-  //       if (!domain) return false;
-  //       const tld = domain.split(".").pop();
-  //       return !/\d/.test(tld);
-  //     }),
-  //   Password: Yup.string()
-  //     .trim()
-  //     .required("This field is Required")
-  //     .matches(
-  //       strongPasswordRegex,
-  //       "Password must contain minimum 8 characters, one uppercase, one lowercase, one number and one special character"
-  //     ),
-  //   CompanyName: Yup.string().trim().required("This filed is Required"),
-  //   Address: Yup.string().trim().required("This filed is Required"),
-  //   City: Yup.string().trim().required("This filed is Required"),
-  //   ZipCode: Yup.string().trim().required("This filed is Required"),
-  //   Industry: Yup.string().trim().required("This filed is Required"),
-  //   CurrencySymbol: Yup.string().trim().required("This filed is Required"),
-  // }),
   loginSchema: Yup.object().shape({
     email: Yup.string()
       .required()
