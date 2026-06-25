@@ -201,7 +201,7 @@ const ItemList = () => {
 
     return (
         <>
-            <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#fff", minHeight: "100vh" }}>
+            <Box sx={{ p: { xs: 2, md: 2 }, bgcolor: "#fff", minHeight: "100vh" }}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between">
                     <Typography variant="h5" sx={{ fontWeight: 600, flex: 1 }}>
                         Items
