@@ -96,9 +96,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
         formData.append("ItemID", itemID);
 
         await uploadFiles(formData);
-        // if (res?.responseCode !== 200) {
-        //     toast.error("Item saved, but picture upload failed.");
-        // }
     };
 
     const handleSave = async (e) => {
@@ -113,7 +110,7 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
                     description: (formValue.description ?? "").trim(),
                     salesRate: Number(formValue.salesRate) || 0,
                     discountPct: Number(formValue.discountPct) || 0,
-                    updatedOnPrev: item?.updatedOn ?? null, // concurrency stamp (null on insert)
+                    updatedOnPrev: item?.updatedOn ?? null,
                 };
                 const res = await createNewItem(payload);
                 if (res?.primaryKeyID) {
@@ -132,7 +129,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
             } catch (error) {
                 console.log('error', error)
                 setLoading(false);
-                // toast.error("");
             } finally {
                 setLoading(false);
             }
@@ -158,27 +154,25 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
             return;
         }
 
-        setPictureFile(file);                  // upload Save ke baad hoga
-        setPreview(URL.createObjectURL(file)); // turant preview
+        setPictureFile(file);                 
+        setPreview(URL.createObjectURL(file));
         e.target.value = "";
     };
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{ sx: { borderRadius: 3 } }}>
-            {/* header */}
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 3, py: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     {isEdit ? "Edit Item" : "New Item"}
                 </Typography>
-                <IconButton size="small" onClick={onClose}>
+                {/* <IconButton size="small" onClick={onClose}>
                     <CloseIcon fontSize="small" />
-                </IconButton>
+                </IconButton> */}
             </Stack>
             <Divider />
 
             <DialogContent sx={{ px: 3, py: 3 }}>
                 <Stack spacing={3}>
-                    {/* picture upload */}
                     <Box>
                         <FieldLabel>Item Picture</FieldLabel>
                         <Stack direction="row" spacing={2} alignItems="flex-start">
@@ -230,7 +224,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
                         </Stack>
                     </Box>
 
-                    {/* name */}
                     <Box>
                         <FieldLabel required>Item Name</FieldLabel>
                         <Field
@@ -244,7 +237,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
                         />
                     </Box>
 
-                    {/* description */}
                     <Box>
                         <FieldLabel>Description</FieldLabel>
                         <Field
@@ -262,7 +254,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
                         </Typography>
                     </Box>
 
-                    {/* rate + discount */}
                     <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
                         <Box>
                             <FieldLabel required>Sale Rate</FieldLabel>
@@ -296,7 +287,6 @@ const CreateItemModal = ({ open = false, item = null, onClose = () => { }, onSav
 
             <Divider />
 
-            {/* footer */}
             <Stack direction="row" spacing={1.5} justifyContent="flex-end" sx={{ px: 3, py: 2 }}>
                 <Button onClick={onClose} sx={{ textTransform: "none", color: "text.secondary" }}>
                     Cancel
