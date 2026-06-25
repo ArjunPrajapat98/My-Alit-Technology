@@ -23,6 +23,7 @@ import {
 import StorageService from "../../utils/StorageServices/StorageServices";
 import toast from "react-hot-toast";
 import Header from "../../components/layout/Header";
+import HeaderLayout from "../../components/layout/HeaderLayout";
 const darkBtnSx = { bgcolor: "#1b1d21", textTransform: "none", px: 3, "&:hover": { bgcolor: "#0f1113" } };
 
 const Dashboard = () => {
@@ -39,7 +40,7 @@ const Dashboard = () => {
     return (
         <>
             <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", bgcolor: "#f7f7f8" }}>
-                <Header />
+                <HeaderLayout isButton={false}/>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ m: 3 }}>
                     <Typography variant="h5" sx={{ fontWeight: 600, flex: 1 }}>
                         Dashboad
