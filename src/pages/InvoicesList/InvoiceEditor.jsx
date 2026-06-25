@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-// import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import toast from "react-hot-toast";
 import { getItemLookupList } from "../../_services/itemsServices";
 import { getInvoiceList, getSingleInvoiceDetails, saveInvoice } from "../../_services/invoiceServices/invoiceServices";
@@ -63,7 +62,6 @@ const emptyLine = () => ({
   discountPct: "",
 });
 
-// Amount = quantity × Rate − (quantity × Rate × discountPct%/100)
 const lineAmount = (line) => {
   const quantity = Number(line.quantity) || 0;
   const rate = Number(line.rate) || 0;
@@ -96,14 +94,11 @@ const InvoiceEditor = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // item lookup for the dropdown
   useEffect(() => {
     getItemLookupList()
       .then((res) => setItems(Array.isArray(res) ? res : res?.data ?? []))
       .catch(() => { });
   }, []);
-
-  // load invoice when editing
 
   const getSingleInvoice = async (id) => {
     try {
@@ -143,7 +138,6 @@ const InvoiceEditor = () => {
 
   const subTotal = useMemo(() => round2(lines.reduce((s, l) => s + lineAmount(l), 0)), [lines]);
 
-  // tax % is canonical: when lines (subtotal) change, recompute the amount from %
   useEffect(() => {
     setTaxAmt(round2((subTotal * (Number(taxPct) || 0)) / 100));
   }, [subTotal, taxPct]);
@@ -163,7 +157,6 @@ const InvoiceEditor = () => {
           ? {
             ...l,
             itemID,
-            // prefill from item, but keep editable. lookup may not carry description.
             rate: picked?.saleRate ?? picked?.rate ?? l.rate,
             discountPct: picked?.discountPct ?? picked?.discountPct ?? l.discountPct,
             description: l.description || picked?.description || "",
@@ -182,11 +175,9 @@ const InvoiceEditor = () => {
   const deleteRow = (key) =>
     setLines((prev) => (prev.length > 1 ? prev.filter((l) => l.key !== key) : prev));
 
-  // tax handlers (two-way link)
   const onTaxPctChange = (value) => {
     setZeroTaxHint(false);
     setTaxPct(value);
-    // amount recomputes via the effect above
   };
 
   const onTaxAmtChange = (value) => {
@@ -273,10 +264,8 @@ const InvoiceEditor = () => {
     } finally {
       setSaving(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saving, isEdit, invoiceID, formValue, taxPct, updatedOn, lines]);
 
-  // keyboard: Ctrl+Enter save, Alt+N add line
   useEffect(() => {
     const onKey = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
@@ -313,7 +302,6 @@ const InvoiceEditor = () => {
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: "#f7f8fa", minHeight: "100vh" }}>
-      {/* formValue bar */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 600, flex: 1 }}>
           {isEdit ? "Edit Invoice" : "New Invoice"}
@@ -335,9 +323,6 @@ const InvoiceEditor = () => {
         </Stack>
       </Stack>
 
-
-
-      {/* invoice details */}
       <SectionCard title="Invoice Details">
         <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 2.5 }}>
           <Box>
@@ -422,7 +407,6 @@ const InvoiceEditor = () => {
         </Box>
       </SectionCard>
 
-      {/* line items */}
       <SectionCard
         title="Line Items"
         action={
@@ -506,7 +490,7 @@ const InvoiceEditor = () => {
                   </TableCell>
                   <TableCell sx={{ pt: 1 }}>
                     <IconButton size="small" color="error" onClick={() => deleteRow(row.key)} disabled={lines.length === 1}>
-                      Delete {/* <DeleteOutlineIcon fontSize="small" /> */}
+                      Delete
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -514,17 +498,7 @@ const InvoiceEditor = () => {
             })}
           </TableBody>
         </Table>
-
-        {/* <Box sx={{ bgcolor: "#f5f6f8", borderRadius: 1.5, mt: 1.5, px: 2, py: 1.25 }}>
-          <Stack direction="row" justifyContent="flex-end" spacing={4}>
-            <Typography variant="body2" color="text.secondary">
-              Subtotal:
-            </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              {formatMoney(subTotal)}
-            </Typography>
-          </Stack>
-        </Box> */}
+      
         <Box
           sx={{
             display: "flex",
@@ -547,76 +521,8 @@ const InvoiceEditor = () => {
         </Box>
       </SectionCard>
 
-      {/* totals */}
-      {/* <SectionCard title="Invoice Totals">
-        <Stack spacing={2} sx={{ maxWidth: 460, ml: "auto" }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography variant="body2" color="text.secondary">
-              Sub Total
-            </Typography>
-            <Box sx={{ bgcolor: "#f5f6f8", borderRadius: 1.5, px: 2, py: 1, minWidth: 150, textAlign: "right" }}>
-              {formatMoney(subTotal)}
-            </Box>
-          </Stack>
-
-          <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-            <Typography variant="body2" color="text.secondary" sx={{ pt: 1 }}>
-              Tax
-            </Typography>
-            <Stack direction="row" spacing={1} alignItems="flex-start">
-              <Tooltip title="Tax % = Tax Amount × 100 / Sub Total">
-                <TextField
-                  size="small"
-                  placeholder="0.00 %"
-                  value={taxPct}
-                  onChange={(e) => onTaxPctChange(e.target.value)}
-                  error={Boolean(errors.formValue.tax)}
-                  inputProps={{ inputMode: "decimal", style: { textAlign: "right" }, "aria-label": "Tax percentage" }}
-                  sx={{ width: 110, ...fieldSx }}
-                />
-              </Tooltip>
-              <Tooltip title="Tax Amount = Sub Total × Tax % / 100">
-                <TextField
-                  size="small"
-                  placeholder="0.00"
-                  value={taxAmt}
-                  onChange={(e) => onTaxAmtChange(e.target.value)}
-                  error={Boolean(errors.formValue.tax)}
-                  inputProps={{ inputMode: "decimal", style: { textAlign: "right" }, "aria-label": "Tax amount" }}
-                  sx={{ width: 130, ...fieldSx }}
-                />
-              </Tooltip>
-            </Stack>
-          </Stack>
-          {(errors.formValue.tax || zeroTaxHint) && (
-            <Typography variant="caption" color={errors.formValue.tax ? "error" : "text.secondary"} sx={{ textAlign: "right" }}>
-              {errors.formValue.tax || "No tax on zero."}
-            </Typography>
-          )}
-
-          <Box
-            sx={{
-              bgcolor: "#f0f1f3",
-              borderRadius: 2,
-              px: 2.5,
-              py: 1.75,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography sx={{ fontWeight: 600 }}>Invoice Amount</Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              {formatMoney(invoiceAmount)}
-            </Typography>
-          </Box>
-        </Stack>
-      </SectionCard> */}
-
       <SectionCard title="Invoice Totals">
         <Stack spacing={2} sx={{ maxWidth: 460, ml: "auto" }}>
-
-          {/* Sub Total */}
           <Box
             sx={{
               display: "grid",
@@ -627,7 +533,6 @@ const InvoiceEditor = () => {
             <Typography variant="body2" color="text.secondary">
               Sub Total
             </Typography>
-
             <Box
               sx={{
                 bgcolor: "#f5f6f8",
@@ -642,8 +547,6 @@ const InvoiceEditor = () => {
             </Box>
           </Box>
 
-
-          {/* Tax */}
           <Box
             sx={{
               display: "grid",
@@ -693,8 +596,6 @@ const InvoiceEditor = () => {
             </Stack>
           </Box>
 
-
-          {/* Tax Error / Hint */}
           {(errors.formValue.tax || zeroTaxHint) && (
             <Typography
               variant="caption"
@@ -705,8 +606,6 @@ const InvoiceEditor = () => {
             </Typography>
           )}
 
-
-          {/* Invoice Amount */}
           <Box
             sx={{
               bgcolor: "#f0f1f3",
