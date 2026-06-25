@@ -432,6 +432,7 @@ const SignUp = () => {
                                         placeholder="Industry type"
                                         name="Industry"
                                         value={formValue.Industry}
+                                        inputProps={{ maxLength: 50 }}
                                         onChange={({ target: { name, value } }) =>
                                             handleOnChange(name, value)
                                         }
@@ -446,8 +447,9 @@ const SignUp = () => {
                                         placeholder="$, ₹, €, AED"
                                         name="CurrencySymbol"
                                         value={formValue.CurrencySymbol}
+                                        inputProps={{ maxLength: 5 }}
                                         onChange={({ target: { name, value } }) =>
-                                            handleOnChange(name, value)
+                                            handleOnChange(name, value.replace(/[^A-Za-z₹$€£¥₽₩]/g, "").slice(0, 5))
                                         }
                                         error={!!(typeof formError === "object" && formError?.CurrencySymbol)}
                                         helperText={!!(typeof formError === "object") ? formError?.CurrencySymbol : ""}
